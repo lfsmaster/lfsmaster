@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Atualizar a mensagem principal
+      - name: Atualizar conteúdo e recursos do site
         shell: python
         run: |
           from pathlib import Path
@@ -37,17 +37,23 @@ jobs:
           new = "Na Middea, transformamos ideias em marcas, conteúdos e experiências que aproximam pessoas, fortalecem negócios e geram resultados."
 
           if old in content:
-              path.write_text(content.replace(old, new, 1), encoding="utf-8")
+              content = content.replace(old, new, 1)
           elif new not in content:
               raise SystemExit("A mensagem principal não foi encontrada no index.html.")
 
-      - name: Registrar correção no repositório
+          portfolio_script = '<script src="portfolio-v2.js"></script>'
+          if portfolio_script not in content:
+              content = content.replace("</body>", f"{portfolio_script}</body>", 1)
+
+          path.write_text(content, encoding="utf-8")
+
+      - name: Registrar atualização no repositório
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           if ! git diff --cached --quiet; then
-            git commit -m "Atualiza a mensagem principal do site"
+            git commit -m "Integra vídeo e conteúdo na área de portfólio"
             git push origin HEAD:main
           fi
 
