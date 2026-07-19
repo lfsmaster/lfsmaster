@@ -9,7 +9,7 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    .logo-no-bg{display:block;width:100%;height:auto;max-height:74px;object-fit:contain;object-position:left center;mix-blend-mode:screen;filter:contrast(1.04);background:transparent}
+    .logo-no-bg{display:block;width:100%;height:auto;max-height:74px;object-fit:contain;object-position:left center;background:transparent}
     .footer-logo.logo-no-bg{width:min(360px,100%);max-height:86px}
     .hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;opacity:.5;filter:grayscale(.15) saturate(.7) contrast(1.14)}
     .hero-video-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.94) 0%,rgba(0,0,0,.76) 48%,rgba(0,0,0,.36) 100%),linear-gradient(0deg,rgba(0,0,0,.76),rgba(0,0,0,.05) 56%,rgba(0,0,0,.52))}
@@ -47,15 +47,36 @@
     return video;
   }
 
-  document.querySelectorAll('.logo-render').forEach((placeholder) => {
-    const img = document.createElement('img');
-    img.src = 'logo.webp';
-    img.alt = placeholder.getAttribute('aria-label') || 'Middea — Acessibilidade, Marketing e Design';
-    img.className = `${placeholder.className.replace('logo-render', '').trim()} logo-no-bg`;
-    img.width = 700;
-    img.height = 60;
-    placeholder.replaceWith(img);
-  });
+  fetch('logo-transparent-base64.txt')
+    .then((response) => {
+      if (!response.ok) throw new Error('Não foi possível carregar a logo.');
+      return response.text();
+    })
+    .then((base64) => {
+      const logoSource = `data:image/webp;base64,${base64.trim()}`;
+      document.querySelectorAll('.logo-render').forEach((placeholder) => {
+        const img = document.createElement('img');
+        img.src = logoSource;
+        img.alt = placeholder.getAttribute('aria-label') || 'Middea — Acessibilidade, Marketing e Design';
+        img.className = `${placeholder.className.replace('logo-render', '').trim()} logo-no-bg`;
+        img.width = 1200;
+        img.height = 305;
+        placeholder.replaceWith(img);
+      });
+    })
+    .catch(() => {
+      document.querySelectorAll('.logo-render').forEach((placeholder) => {
+        placeholder.textContent = 'MIDDEA';
+        placeholder.style.display = 'grid';
+        placeholder.style.placeItems = 'center';
+        placeholder.style.fontWeight = '900';
+      });
+    });
+
+  const heroCopy = document.querySelector('.hero-bottom p');
+  if (heroCopy) {
+    heroCopy.textContent = 'Na Middea, transformamos ideias em marcas, conteúdos e experiências que aproximam pessoas, fortalecem negócios e geram resultados.';
+  }
 
   const hero = document.querySelector('.hero');
   if (hero && !hero.querySelector('.hero-video')) {
@@ -98,11 +119,30 @@
 
   const portfolioLead = document.querySelector('#portfolio .section-lead');
   if (portfolioLead && !portfolioLead.textContent.includes('vídeos foram selecionados')) {
-    portfolioLead.textContent += ' Os vídeos foram selecionados para representar colaboração, design e produção audiovisual.';
+    portfolioLead.textContent += ' Os vídeos foram selecionados para traduzir visualmente colaboração, criatividade e produção audiovisual.';
   }
 
   const legal = document.querySelector('.legal span:last-child');
   if (legal) legal.textContent = 'Portfólio de capacidades da agência. Vídeos de apoio: Pexels.';
+
+  const siteVideos = [...document.querySelectorAll('video')];
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  function updateVideoPlayback() {
+    siteVideos.forEach((video) => {
+      const rect = video.getBoundingClientRect();
+      const visible = rect.bottom > 0 && rect.top < innerHeight;
+      if (reducedMotion.matches || document.body.classList.contains('reduce-motion') || !visible || document.hidden) {
+        video.pause();
+      } else {
+        video.play().catch(() => {});
+      }
+    });
+  }
+  addEventListener('scroll', updateVideoPlayback, { passive: true });
+  addEventListener('resize', updateVideoPlayback, { passive: true });
+  document.addEventListener('visibilitychange', updateVideoPlayback);
+  reducedMotion.addEventListener?.('change', updateVideoPlayback);
+  requestAnimationFrame(updateVideoPlayback);
 
   const header = document.getElementById('header');
   addEventListener('scroll', () => header?.classList.toggle('scrolled', scrollY > 24), { passive: true });
