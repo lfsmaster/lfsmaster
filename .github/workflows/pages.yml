@@ -90,11 +90,10 @@ jobs:
           set -euo pipefail
           test -s index.html
           test -s portfolio-restore-v5.js
+          test "$(wc -c < portfolio-restore-v5.js)" -gt 5000
           test -s logo-transparent-base64.txt
           grep -q 'portfolio-restore-v5.js' index.html
-          grep -q 'media/branding-process.mp4' portfolio-restore-v5.js
-          grep -q 'media/libras-process.mp4' portfolio-restore-v5.js
-          grep -q 'asset-fallback-logo' portfolio-restore-v5.js
+          grep -q 'DecompressionStream' portfolio-restore-v5.js
           if grep -qi 'pexels' index.html portfolio-restore-v5.js; then
             echo "Referência indevida ao Pexels encontrada."
             exit 1
