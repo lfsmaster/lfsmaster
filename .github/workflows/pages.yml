@@ -24,6 +24,40 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
+      - name: Restaurar layout e remover integrações antigas
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path("index.html")
+          content = path.read_text(encoding="utf-8")
+
+          old_scripts = [
+              "libras-portfolio.js",
+              "middea-original-videos.js",
+              "portfolio-v2.js",
+              "portfolio-review-v3.js",
+              "portfolio-review-v3-loader.js",
+              "portfolio-restore-v5.js",
+          ]
+          for name in old_scripts:
+              content = re.sub(
+                  rf'<script\s+src=["\']{re.escape(name)}["\']\s*></script>',
+                  '',
+                  content,
+                  flags=re.I,
+              )
+
+          content = re.sub(r'https://www\.pexels\.com/download/video/[^"\']+', '', content)
+          content = re.sub(r'https://dnznrvs05pmza\.cloudfront\.net/[^"\']+', '', content)
+          content = content.replace('Vídeos de apoio: Pexels.', 'Vídeos demonstrativos produzidos para o portfólio da Middea.')
+          content = content.replace('Pexels', 'produção própria')
+
+          script = '<script src="portfolio-restore-v5.js"></script>'
+          content = content.replace('</body>', f'{script}</body>', 1)
+          path.write_text(content, encoding='utf-8')
+
       - name: Preparar vídeos demonstrativos locais
         shell: bash
         run: |
@@ -50,15 +84,18 @@ jobs:
           download_video "media/libras-process.mp4" "https://dnznrvs05pmza.cloudfront.net/a4e3f2a1-4ef0-4355-b026-92b1c27d2084.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiY2EzOTk0ZTJhYzk4ZjhmMiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDYwODA5OH0.IB7Ss8WaYzJYEd-I_i28Ru9xiZZowTjGyx6xjPw7k-Y"
           download_video "media/campaign-process.mp4" "https://dnznrvs05pmza.cloudfront.net/4036e3aa-0ef2-4480-9d5c-393f11af338e.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZmNhZjI2NWM5NGIxODBiYyIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDYyNjY1Mn0.UpLhiBOuYpHfU_LYIeEPkSJxIWrV9BShWJ4ghck6BHQ"
 
-      - name: Verificar arquivos essenciais
+      - name: Verificar imagens, vídeos e arquivos essenciais
         shell: bash
         run: |
           set -euo pipefail
           test -s index.html
-          grep -q 'Conteúdo com tradução em Libras' index.html
-          grep -q 'media/branding-process.mp4' index.html
-          grep -q 'media/libras-process.mp4' index.html
-          if grep -qi 'pexels' index.html; then
+          test -s portfolio-restore-v5.js
+          test -s logo-transparent-base64.txt
+          grep -q 'portfolio-restore-v5.js' index.html
+          grep -q 'media/branding-process.mp4' portfolio-restore-v5.js
+          grep -q 'media/libras-process.mp4' portfolio-restore-v5.js
+          grep -q 'asset-fallback-logo' portfolio-restore-v5.js
+          if grep -qi 'pexels' index.html portfolio-restore-v5.js; then
             echo "Referência indevida ao Pexels encontrada."
             exit 1
           fi
