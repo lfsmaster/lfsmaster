@@ -24,24 +24,32 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Integrar Libras e vídeos originais
+      - name: Aplicar revisão premium do portfólio
         shell: python
         run: |
           from pathlib import Path
+          import re
 
           path = Path("index.html")
           content = path.read_text(encoding="utf-8")
-          scripts = [
-              '<script src="libras-portfolio.js"></script>',
-              '<script src="middea-original-videos.js"></script>'
+
+          # Remove integrações antigas e qualquer referência a bancos de vídeos externos.
+          old_scripts = [
+              "libras-portfolio.js",
+              "middea-original-videos.js",
+              "portfolio-v2.js",
+              "portfolio-review-v3.js",
           ]
+          for name in old_scripts:
+              content = re.sub(rf'<script\s+src=["\']{re.escape(name)}["\']\s*></script>', '', content)
 
-          for script in scripts:
-              if script not in content:
-                  content = content.replace("</body>", f"{script}</body>", 1)
+          content = re.sub(r'https://www\.pexels\.com/download/video/[^"\']+', '', content)
+          content = re.sub(r'https://dnznrvs05pmza\.cloudfront\.net/[^"\']+', '', content)
+          content = content.replace("Vídeos de apoio: Pexels.", "Demonstrações em motion design produzidas para o portfólio da Middea.")
+          content = content.replace("Pexels", "motion design original")
 
-          content = content.replace("Vídeos de apoio: Pexels.", "Vídeos demonstrativos originais produzidos para o portfólio da Middea.")
-          content = content.replace("Pexels", "produção original Middea")
+          script = '<script src="portfolio-review-v3.js"></script>'
+          content = content.replace("</body>", f"{script}</body>", 1)
           path.write_text(content, encoding="utf-8")
 
       - name: Configurar GitHub Pages
