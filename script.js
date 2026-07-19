@@ -7,81 +7,83 @@
     audiovisual: 'https://www.pexels.com/download/video/19197555/'
   };
 
+  const approvedHeroCopy = 'Na Middea, transformamos ideias em marcas, conteúdos e experiências que aproximam pessoas, fortalecem negócios e geram resultados.';
+
   const style = document.createElement('style');
   style.textContent = `
     .logo-no-bg{display:block;width:100%;height:auto;max-height:74px;object-fit:contain;object-position:left center;background:transparent}
     .footer-logo.logo-no-bg{width:min(360px,100%);max-height:86px}
-
-    /* HERO — composição otimizada */
-    .hero{min-height:min(980px,100svh);padding:132px 0 42px;align-items:center;isolation:isolate;background:#030303}
+    .hero{isolation:isolate}
     .hero-video{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:center;z-index:0;opacity:.34;filter:grayscale(.55) saturate(.58) contrast(1.12);transform:scale(1.025)}
-    .hero-video-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.97) 0%,rgba(0,0,0,.88) 42%,rgba(0,0,0,.58) 72%,rgba(0,0,0,.72) 100%),linear-gradient(0deg,rgba(0,0,0,.92) 0%,rgba(0,0,0,.08) 52%,rgba(0,0,0,.68) 100%)}
-    .hero::before{z-index:2;opacity:.58}
-    .hero::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle at 74% 34%,rgba(255,0,0,.13),transparent 29%),linear-gradient(180deg,transparent 64%,#000 100%)}
-    .hero .orb{z-index:3;width:310px;height:310px;right:4.5%;top:19%;opacity:.72;filter:saturate(.9);box-shadow:inset -50px -50px 90px rgba(0,0,0,.72),0 25px 85px rgba(255,0,0,.12)}
-    .hero-content{z-index:4!important;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);column-gap:48px;align-items:end}
-    .hero-content>.eyebrow,.hero-content>h1{grid-column:1}
-    .hero .eyebrow{width:max-content;padding:10px 14px 10px 0;color:#d4d4d4}
-    .hero .eyebrow::before{width:34px;height:2px;background:#ff0000}
-    .hero h1{font-size:clamp(4.35rem,8.35vw,8.7rem);line-height:.87;letter-spacing:-.078em;max-width:1040px;margin:22px 0 32px;text-wrap:balance}
-    .hero h1 .outline{-webkit-text-stroke:1.5px rgba(255,255,255,.94)}
-    .hero h1 .accent{background:linear-gradient(90deg,#ff0000 0%,#ff3434 48%,#fff 100%);background-clip:text;-webkit-background-clip:text;color:transparent}
-    .hero-bottom{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.18fr) minmax(300px,.62fr);gap:22px;align-items:stretch}
-    .hero-message,.hero-actions{border:1px solid rgba(255,255,255,.16);background:linear-gradient(145deg,rgba(20,20,20,.76),rgba(4,4,4,.7));backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 24px 70px rgba(0,0,0,.24)}
-    .hero-message{position:relative;border-radius:24px;padding:27px 30px 28px 34px;overflow:hidden}
-    .hero-message::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#ff0000}
-    .hero-message-label{display:block;margin-bottom:11px;color:#ff4848;font-size:.66rem;font-weight:900;letter-spacing:.15em;text-transform:uppercase}
-    .hero-message p{font-size:clamp(1rem,1.35vw,1.2rem);line-height:1.68;color:#e2e2e2;max-width:760px;margin:0}
-    .hero-actions{border-radius:24px;padding:24px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:11px}
-    .hero-action-label{margin:0 0 4px;color:#9c9c9c;font-size:.66rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase}
-    .hero-actions .btn{width:100%;min-height:55px}
-    .hero-actions .btn:not(.btn-primary){background:rgba(255,255,255,.04)}
-    .hero-actions .btn-primary{box-shadow:0 12px 34px rgba(255,0,0,.2)}
-    .hero-meta{grid-column:1/-1;margin-top:24px;padding-top:0;border-top:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .hero-meta .meta-card{min-height:94px;border:1px solid rgba(255,255,255,.12);border-radius:19px;background:rgba(8,8,8,.56);backdrop-filter:blur(12px);padding:18px 20px;align-items:center;transition:transform .25s ease,border-color .25s ease,background .25s ease}
-    .hero-meta .meta-card:hover{transform:translateY(-3px);border-color:rgba(255,0,0,.55);background:rgba(18,18,18,.7)}
-    .hero-meta .meta-card strong{min-width:66px;font-size:2rem;color:#fff}
-    .hero-meta .meta-card span{color:#aaa;max-width:150px}
-    .hero-signature{grid-column:2;grid-row:1 / span 2;align-self:center;justify-self:end;width:min(100%,340px);padding:18px 20px;border-left:1px solid rgba(255,255,255,.18);color:#aaa;font-size:.72rem;line-height:1.65;letter-spacing:.06em;text-transform:uppercase}
-    .hero-signature strong{display:block;color:#fff;font-size:.95rem;letter-spacing:.02em;text-transform:none;margin-bottom:7px}
-
-    /* Vídeos do portfólio */
-    .video-art{background:#050505}
-    .project-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;filter:grayscale(.12) saturate(.72) contrast(1.12)}
-    .video-overlay{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.58)),linear-gradient(90deg,rgba(255,0,0,.28),transparent 55%)}
-    .video-art .project-brand-logo{position:absolute;z-index:4;width:82%;height:auto;left:9%;top:50%;transform:translateY(-50%);object-fit:contain}
-    .video-art .play{z-index:4}
-    .video-source{position:absolute;left:18px;bottom:18px;z-index:5;padding:8px 11px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);font-size:.62rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    .hero-video-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(0,0,0,.97),rgba(0,0,0,.86) 44%,rgba(0,0,0,.55) 76%,rgba(0,0,0,.74)),linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.08) 52%,rgba(0,0,0,.68))}
+    .hero::before{z-index:2}.hero .orb{z-index:3}.hero-content{z-index:4!important}
+    #portfolio{background:#080808}
+    #portfolio .section-head{margin-bottom:34px}
+    #portfolio .section-lead{max-width:720px}
+    #portfolio .filters{display:flex;gap:8px;flex-wrap:wrap;width:max-content;max-width:100%;padding:7px;margin-bottom:26px;border:1px solid rgba(255,255,255,.14);border-radius:999px;background:#0e0e0e}
+    #portfolio .filter{border:0;background:transparent;padding:10px 15px;color:#aaa;transition:background .25s,color .25s,transform .25s}
+    #portfolio .filter.active,#portfolio .filter:hover{background:#ff0000;color:#fff;transform:none}
+    #portfolio .projects{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:112px;gap:18px}
+    #portfolio .project{position:relative;isolation:isolate;overflow:hidden;min-height:0!important;border-radius:26px;border:1px solid rgba(255,255,255,.16);background:#111;box-shadow:0 20px 65px rgba(0,0,0,.18);transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}
+    #portfolio .project:hover{transform:translateY(-6px);border-color:rgba(255,0,0,.72);box-shadow:0 28px 90px rgba(0,0,0,.42)}
+    #portfolio .project[hidden]{display:none}
+    #portfolio .project.portfolio-featured{grid-column:span 7;grid-row:span 5}
+    #portfolio .project.portfolio-tall{grid-column:span 5;grid-row:span 5}
+    #portfolio .project.portfolio-wide{grid-column:span 6;grid-row:span 4}
+    #portfolio .project-art{position:absolute;inset:0;width:100%;height:100%!important;z-index:0;overflow:hidden;transition:transform .75s cubic-bezier(.2,.8,.2,1),filter .4s}
+    #portfolio .project:hover .project-art{transform:scale(1.025)}
+    #portfolio .project::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.08) 34%,rgba(0,0,0,.9) 100%),linear-gradient(90deg,rgba(0,0,0,.38),transparent 66%)}
+    #portfolio .project.portfolio-light::before{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.04) 38%,rgba(255,255,255,.94) 100%)}
+    #portfolio .project-copy{position:absolute;inset:0;z-index:3;padding:24px;display:flex;flex-direction:column;justify-content:space-between;background:none!important}
+    #portfolio .project-copy small{display:flex;align-items:center;justify-content:space-between;gap:12px;color:#ff4747;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;font-weight:900}
+    #portfolio .project-copy small::after{content:attr(data-status);color:#ddd;border:1px solid rgba(255,255,255,.23);border-radius:999px;padding:8px 10px;background:rgba(0,0,0,.28);backdrop-filter:blur(8px)}
+    #portfolio .project.portfolio-light .project-copy small::after{color:#111;border-color:rgba(0,0,0,.18);background:rgba(255,255,255,.62)}
+    #portfolio .project-copy h3{margin:auto 0 10px;max-width:90%;font-size:clamp(1.75rem,3vw,3.45rem);line-height:.98;letter-spacing:-.052em;text-wrap:balance;color:#fff}
+    #portfolio .project-copy p{max-width:620px;margin:0;color:#c8c8c8;font-size:.88rem;line-height:1.6}
+    #portfolio .project.portfolio-light .project-copy h3{color:#111}
+    #portfolio .project.portfolio-light .project-copy p{color:#333}
+    #portfolio .portfolio-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;padding-right:64px}
+    #portfolio .portfolio-tags span{font-size:.59rem;font-weight:900;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 9px;background:rgba(0,0,0,.24);color:#fff}
+    #portfolio .project.portfolio-light .portfolio-tags span{border-color:rgba(0,0,0,.17);background:rgba(255,255,255,.56);color:#111}
+    #portfolio .project-arrow{right:22px;top:auto;bottom:22px;z-index:5;width:50px;height:50px;border-color:rgba(255,255,255,.3);background:rgba(0,0,0,.3)}
+    #portfolio .project.portfolio-light .project-arrow{color:#111;border-color:rgba(0,0,0,.24);background:rgba(255,255,255,.65)}
+    #portfolio .project:hover .project-arrow{transform:rotate(45deg);background:#ff0000;color:#fff;border-color:#ff0000}
+    .portfolio-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;filter:grayscale(.16) saturate(.74) contrast(1.08);transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .4s}
+    #portfolio .project:hover .portfolio-video{transform:scale(1.04);filter:grayscale(.04) saturate(.92) contrast(1.08)}
+    .portfolio-video-overlay{position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(255,0,0,.2),transparent 58%),linear-gradient(180deg,transparent 42%,rgba(0,0,0,.64))}
+    .portfolio-video-label{position:absolute;left:18px;top:18px;z-index:4;padding:8px 11px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);font-size:.6rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase;color:#fff}
     .video-loaded .film-strip{display:none}
+    .video-loaded.art-brand::before,.video-loaded.art-brand::after{opacity:.32}
+    #portfolio .art-social{background:linear-gradient(145deg,#ff0000,#740000)}
+    #portfolio .phone{width:43%;height:75%;top:10%;border-radius:30px}
+    #portfolio .art-web{background:linear-gradient(145deg,#050505,#262626)}
+    #portfolio .browser{inset:10% 7%;transform:perspective(900px) rotateX(3deg) rotateY(-5deg)}
+    #portfolio .art-access{background:#fff}
+    #portfolio .access-grid{inset:9%}
+    #portfolio .art-campaign{background:linear-gradient(145deg,#ff0000,#550000)}
+    #portfolio .poster{width:60%;left:20%;height:70%;top:14%}
+    #portfolio .art-print{background:#dedede}
+    #portfolio .art-photo{background:linear-gradient(160deg,#050505,#353535)}
+    @media(max-width:1050px){#portfolio .project.portfolio-featured,#portfolio .project.portfolio-tall,#portfolio .project.portfolio-wide{grid-column:span 6}}
+    @media(max-width:720px){
+      #portfolio .filters{width:100%;overflow-x:auto;flex-wrap:nowrap;border-radius:20px;scrollbar-width:none}
+      #portfolio .filters::-webkit-scrollbar{display:none}
+      #portfolio .filter{flex:0 0 auto}
+      #portfolio .projects{grid-template-columns:1fr;grid-auto-rows:auto;gap:14px}
+      #portfolio .project,#portfolio .project.portfolio-featured,#portfolio .project.portfolio-tall,#portfolio .project.portfolio-wide{grid-column:1;grid-row:auto;min-height:500px!important}
+      #portfolio .project.portfolio-featured{min-height:540px!important}
+      #portfolio .project-copy{padding:20px}
+      #portfolio .project-copy h3{max-width:100%;padding-right:38px;font-size:clamp(2rem,8.5vw,3.1rem)}
+      #portfolio .portfolio-tags{display:none}
+      #portfolio .project-arrow{right:17px;bottom:17px;width:46px;height:46px}
+      .portfolio-video-label{left:14px;top:14px}
+    }
     body.reduce-motion video{display:none!important}
-
-    @media(max-width:1120px){
-      .hero{min-height:auto;padding:126px 0 42px}
-      .hero-content{grid-template-columns:1fr}
-      .hero-content>.eyebrow,.hero-content>h1{grid-column:1}
-      .hero-signature{display:none}
-      .hero h1{max-width:930px}
-      .hero-bottom{grid-template-columns:minmax(0,1fr) 310px}
-      .hero .orb{right:-95px;top:145px;opacity:.46}
-    }
-    @media(max-width:760px){
-      .hero{padding:108px 0 30px}
-      .hero-video{opacity:.25;object-position:62% center}
-      .hero-video-shade{background:linear-gradient(90deg,rgba(0,0,0,.96),rgba(0,0,0,.72)),linear-gradient(0deg,#000 0%,transparent 60%,rgba(0,0,0,.72) 100%)}
-      .hero .orb{width:220px;height:220px;right:-135px;top:118px;opacity:.34}
-      .hero h1{font-size:clamp(3.6rem,17.2vw,5.8rem);line-height:.88;margin:18px 0 25px}
-      .hero-bottom{grid-template-columns:1fr;gap:12px}
-      .hero-message{padding:23px 22px 24px 27px;border-radius:20px}
-      .hero-actions{padding:18px;border-radius:20px}
-      .hero-meta{grid-template-columns:1fr;gap:9px;margin-top:13px}
-      .hero-meta .meta-card{min-height:76px;padding:14px 17px}
-      .hero-meta .meta-card strong{font-size:1.7rem}
-    }
-    @media(prefers-reduced-motion:reduce){video{display:none!important}.hero{background:#050505}.video-art{background:#111}}
+    @media(prefers-reduced-motion:reduce){video{display:none!important}.reveal{opacity:1!important;transform:none!important}}
   `;
   document.head.appendChild(style);
 
-  function makeVideo(url, className, label) {
+  function createVideo(url, className, label) {
     const video = document.createElement('video');
     video.className = className;
     video.autoplay = true;
@@ -129,39 +131,11 @@
     });
 
   const heroCopy = document.querySelector('.hero-bottom p');
-  if (heroCopy) {
-    heroCopy.textContent = 'Na Middea, transformamos ideias em marcas, conteúdos e experiências que aproximam pessoas, fortalecem negócios e geram resultados.';
-
-    if (!heroCopy.closest('.hero-message')) {
-      const message = document.createElement('div');
-      message.className = 'hero-message';
-      const label = document.createElement('span');
-      label.className = 'hero-message-label';
-      label.textContent = 'Estratégia criativa com propósito';
-      heroCopy.before(message);
-      message.append(label, heroCopy);
-    }
-  }
-
-  const heroActions = document.querySelector('.hero-actions');
-  if (heroActions && !heroActions.querySelector('.hero-action-label')) {
-    const actionLabel = document.createElement('p');
-    actionLabel.className = 'hero-action-label';
-    actionLabel.textContent = 'Escolha o próximo passo';
-    heroActions.prepend(actionLabel);
-  }
-
-  const heroContent = document.querySelector('.hero-content');
-  if (heroContent && !heroContent.querySelector('.hero-signature')) {
-    const signature = document.createElement('aside');
-    signature.className = 'hero-signature';
-    signature.innerHTML = '<strong>Uma agência. Várias possibilidades.</strong>Branding, conteúdo, campanhas, web, audiovisual, fotografia e acessibilidade trabalhando na mesma direção.';
-    heroContent.append(signature);
-  }
+  if (heroCopy) heroCopy.textContent = approvedHeroCopy;
 
   const hero = document.querySelector('.hero');
   if (hero && !hero.querySelector('.hero-video')) {
-    const video = makeVideo(VIDEO_URLS.teamwork, 'hero-video', 'Equipe criativa colaborando em um projeto');
+    const video = createVideo(VIDEO_URLS.teamwork, 'hero-video', 'Equipe criativa colaborando em um projeto');
     video.setAttribute('aria-hidden', 'true');
     const shade = document.createElement('div');
     shade.className = 'hero-video-shade';
@@ -170,64 +144,60 @@
     hero.prepend(video);
   }
 
-  const brandingArt = document.querySelector('.art-brand');
+  const portfolioLead = document.querySelector('#portfolio .section-lead');
+  if (portfolioLead) portfolioLead.textContent = 'Conceitos demonstrativos que traduzem as principais frentes da agência. Cada card reúne imagem ou vídeo, proposta, entregáveis e direção criativa na mesma área.';
+  const portfolioTitle = document.querySelector('#portfolio .section-title');
+  if (portfolioTitle) portfolioTitle.textContent = 'Projetos que mostram o que podemos criar juntos.';
+
+  const projects = [...document.querySelectorAll('#portfolio .project')];
+  const sizeClasses = ['portfolio-featured','portfolio-tall','portfolio-wide','portfolio-wide','portfolio-tall','portfolio-featured','portfolio-wide','portfolio-wide'];
+  const statuses = ['Estratégia + Design','Conteúdo','UX/UI','Vídeo + Motion','Inclusão','Projeto 360°','Impresso','Direção de Arte'];
+  const lightProjects = new Set([4, 6]);
+
+  projects.forEach((project, index) => {
+    project.classList.remove('large', 'medium', 'half');
+    project.classList.add(sizeClasses[index] || 'portfolio-wide');
+    if (lightProjects.has(index)) project.classList.add('portfolio-light');
+    const copy = project.querySelector('.project-copy');
+    const small = copy?.querySelector('small');
+    if (small) small.dataset.status = statuses[index] || 'Projeto';
+    if (copy && !copy.querySelector('.portfolio-tags')) {
+      const tags = document.createElement('div');
+      tags.className = 'portfolio-tags';
+      const deliverables = (project.dataset.deliverables || '').split('|').slice(0, 3);
+      tags.innerHTML = deliverables.map((item) => `<span>${item}</span>`).join('');
+      copy.appendChild(tags);
+    }
+  });
+
+  const brandingArt = projects[0]?.querySelector('.project-art');
   if (brandingArt && !brandingArt.querySelector('video')) {
-    brandingArt.classList.add('video-art');
-    const video = makeVideo(VIDEO_URLS.design, 'project-video', 'Designer trabalhando em uma composição visual');
+    const video = createVideo(VIDEO_URLS.design, 'portfolio-video', 'Designer trabalhando em uma composição visual');
     const overlay = document.createElement('div');
-    overlay.className = 'video-overlay';
+    overlay.className = 'portfolio-video-overlay';
     const label = document.createElement('span');
-    label.className = 'video-source';
+    label.className = 'portfolio-video-label';
     label.textContent = 'Design em processo';
     brandingArt.prepend(overlay);
     brandingArt.prepend(video);
     brandingArt.append(label);
   }
 
-  const filmArt = document.querySelector('.art-film');
+  const filmArt = projects[3]?.querySelector('.project-art');
   if (filmArt && !filmArt.querySelector('video')) {
-    filmArt.classList.add('video-art');
-    const video = makeVideo(VIDEO_URLS.audiovisual, 'project-video', 'Videomaker operando uma câmera profissional');
+    const video = createVideo(VIDEO_URLS.audiovisual, 'portfolio-video', 'Videomaker operando uma câmera profissional');
     const overlay = document.createElement('div');
-    overlay.className = 'video-overlay';
+    overlay.className = 'portfolio-video-overlay';
     const label = document.createElement('span');
-    label.className = 'video-source';
+    label.className = 'portfolio-video-label';
     label.textContent = 'Captação audiovisual';
     filmArt.prepend(overlay);
     filmArt.prepend(video);
     filmArt.append(label);
   }
 
-  const portfolioLead = document.querySelector('#portfolio .section-lead');
-  if (portfolioLead && !portfolioLead.textContent.includes('vídeos foram selecionados')) {
-    portfolioLead.textContent += ' Os vídeos foram selecionados para traduzir visualmente colaboração, criatividade e produção audiovisual.';
-  }
-
-  const legal = document.querySelector('.legal span:last-child');
-  if (legal) legal.textContent = 'Portfólio de capacidades da agência. Vídeos de apoio: Pexels.';
-
-  const siteVideos = [...document.querySelectorAll('video')];
-  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  function updateVideoPlayback() {
-    siteVideos.forEach((video) => {
-      const rect = video.getBoundingClientRect();
-      const visible = rect.bottom > 0 && rect.top < innerHeight;
-      if (reducedMotion.matches || document.body.classList.contains('reduce-motion') || !visible || document.hidden) {
-        video.pause();
-      } else {
-        video.play().catch(() => {});
-      }
-    });
-  }
-  addEventListener('scroll', updateVideoPlayback, { passive: true });
-  addEventListener('resize', updateVideoPlayback, { passive: true });
-  document.addEventListener('visibilitychange', updateVideoPlayback);
-  reducedMotion.addEventListener?.('change', updateVideoPlayback);
-  requestAnimationFrame(updateVideoPlayback);
-
   const header = document.getElementById('header');
   addEventListener('scroll', () => header?.classList.toggle('scrolled', scrollY > 24), { passive: true });
-
   const menuToggle = document.getElementById('menuToggle');
   const menu = document.getElementById('mainMenu');
   menuToggle?.addEventListener('click', () => {
@@ -237,27 +207,26 @@
     menuToggle.textContent = open ? '×' : '☰';
     menuToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
   });
-  menu?.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => {
+  menu?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => {
     menu.classList.remove('open');
     document.body.classList.remove('menu-open');
     menuToggle?.setAttribute('aria-expanded', 'false');
     if (menuToggle) menuToggle.textContent = '☰';
   }));
 
-  const observer = new IntersectionObserver((entries) => {
+  const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+        revealObserver.unobserve(entry.target);
       }
     });
   }, { threshold: .1 });
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  document.querySelectorAll('.reveal').forEach((element) => revealObserver.observe(element));
 
-  const filters = [...document.querySelectorAll('.filter')];
-  const projects = [...document.querySelectorAll('.project')];
+  const filters = [...document.querySelectorAll('#portfolio .filter')];
   filters.forEach((button) => button.addEventListener('click', () => {
-    filters.forEach((b) => b.classList.remove('active'));
+    filters.forEach((item) => item.classList.remove('active'));
     button.classList.add('active');
     const target = button.dataset.filter;
     projects.forEach((project) => {
@@ -271,7 +240,7 @@
   const modalDesc = document.getElementById('modalDesc');
   const modalList = document.getElementById('modalList');
   const modalVisual = document.getElementById('modalVisual');
-  const close = document.getElementById('modalClose');
+  const closeButton = document.getElementById('modalClose');
   let lastFocus = null;
 
   function openProject(project) {
@@ -282,7 +251,7 @@
     modalVisual.textContent = project.dataset.title.split(' ').slice(0, 2).join(' ').toUpperCase();
     modal.classList.add('open');
     document.body.classList.add('modal-open');
-    close.focus();
+    closeButton?.focus();
   }
   function closeModal() {
     modal.classList.remove('open');
@@ -298,36 +267,34 @@
       }
     });
   });
-  close?.addEventListener('click', closeModal);
+  closeButton?.addEventListener('click', closeModal);
   modal?.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
   addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal?.classList.contains('open')) closeModal(); });
   document.getElementById('modalCta')?.addEventListener('click', closeModal);
 
-  let font = 16;
-  document.getElementById('fontBtn')?.addEventListener('click', () => {
-    font = font >= 19 ? 16 : font + 1;
-    document.documentElement.style.fontSize = `${font}px`;
-  });
-  document.getElementById('motionBtn')?.addEventListener('click', () => {
-    const reduced = document.body.classList.toggle('reduce-motion');
-    document.querySelectorAll('video').forEach((video) => {
-      if (reduced) video.pause();
-      else video.play().catch(() => {});
-    });
-  });
-
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const videos = [...document.querySelectorAll('video')];
   const videoObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       const video = entry.target;
-      if (entry.isIntersecting && !document.body.classList.contains('reduce-motion')) video.play().catch(() => {});
-      else video.pause();
+      const pause = reducedMotion.matches || document.body.classList.contains('reduce-motion') || !entry.isIntersecting || document.hidden;
+      if (pause) video.pause(); else video.play().catch(() => {});
     });
-  }, { rootMargin: '160px', threshold: .05 });
-  document.querySelectorAll('.project-video').forEach((video) => videoObserver.observe(video));
+  }, { rootMargin: '180px', threshold: .05 });
+  videos.forEach((video) => videoObserver.observe(video));
+  document.addEventListener('visibilitychange', () => {
+    videos.forEach((video) => document.hidden ? video.pause() : video.play().catch(() => {}));
+  });
 
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.querySelectorAll('video').forEach((video) => video.pause());
-  }
+  let fontSize = 16;
+  document.getElementById('fontBtn')?.addEventListener('click', () => {
+    fontSize = fontSize >= 19 ? 16 : fontSize + 1;
+    document.documentElement.style.fontSize = `${fontSize}px`;
+  });
+  document.getElementById('motionBtn')?.addEventListener('click', () => {
+    const reduced = document.body.classList.toggle('reduce-motion');
+    videos.forEach((video) => reduced ? video.pause() : video.play().catch(() => {}));
+  });
 
   const phone = document.getElementById('phone');
   phone?.addEventListener('input', () => {
