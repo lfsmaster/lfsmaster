@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -24,94 +24,17 @@ jobs:
       - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Restaurar layout e remover integrações antigas
-        shell: python
-        run: |
-          from pathlib import Path
-          import re
-
-          path = Path("index.html")
-          content = path.read_text(encoding="utf-8")
-
-          old_scripts = [
-              "libras-portfolio.js",
-              "middea-original-videos.js",
-              "portfolio-v2.js",
-              "portfolio-review-v3.js",
-              "portfolio-review-v3-loader.js",
-              "portfolio-restore-v5.js",
-          ]
-          for name in old_scripts:
-              content = re.sub(
-                  rf'<script\s+src=["\']{re.escape(name)}["\']\s*></script>',
-                  '',
-                  content,
-                  flags=re.I,
-              )
-
-          content = re.sub(r'https://www\.pexels\.com/download/video/[^"\']+', '', content)
-          content = re.sub(r'https://dnznrvs05pmza\.cloudfront\.net/[^"\']+', '', content)
-          content = content.replace('Vídeos de apoio: Pexels.', 'Vídeos demonstrativos produzidos para o portfólio da Middea.')
-          content = content.replace('Pexels', 'produção própria')
-
-          script = '<script src="portfolio-restore-v5.js"></script>'
-          content = content.replace('</body>', f'{script}</body>', 1)
-          path.write_text(content, encoding='utf-8')
-
-      - name: Preparar vídeos demonstrativos locais
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p media
-
-          download_video() {
-            local target="$1"
-            local url="$2"
-            if [ -s "$target" ] && [ "$(wc -c < "$target")" -gt 100000 ]; then
-              echo "Arquivo já disponível: $target"
-              return
-            fi
-            rm -f "$target"
-            curl --fail --location --retry 3 --retry-delay 2 "$url" --output "$target"
-            test -s "$target"
-            test "$(wc -c < "$target")" -gt 100000
-          }
-
-          download_video "media/branding-process.mp4" "https://dnznrvs05pmza.cloudfront.net/592c58f4-4b9a-4b24-a337-3e1adb8aa74d.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZGEyOWQzZjRlNjI0ZGYwYSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDYwMzEyNH0.SCv8NrDfTrHRvANtsdgF9v0uOuqTLX7BK4jNQx8Waq4"
-          download_video "media/social-media-process.mp4" "https://dnznrvs05pmza.cloudfront.net/adaa9f3f-e238-4eef-99bd-218d75a9d66d.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiY2QxZTI3Y2Y3ODUwZGFlOSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDY3MTk1MX0.x8HR3hhafmYiqeZFoX7FO-zIiuVelE8mgE0uLHgME3I"
-          download_video "media/web-design-process.mp4" "https://dnznrvs05pmza.cloudfront.net/1dda2a05-6dcc-439f-8396-a230950d2a0b.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiOTVhYzBhZDgzOTk1NDQ0NyIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDYyODk1Mn0.8K2CVjIgaVbUAzcRFqNq80sEuEbOcDNXpFCxdkMnOW4"
-          download_video "media/audiovisual-process.mp4" "https://dnznrvs05pmza.cloudfront.net/a356dd48-aedd-4d96-a5b5-918f027849dc.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiNzIxZWI2YjgwMGQ5N2MyNSIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDY2OTg4MH0.53NiDYJ8r7YmAHGBICyt38CC8IleXAZrEagudVFkRuY"
-          download_video "media/libras-process.mp4" "https://dnznrvs05pmza.cloudfront.net/a4e3f2a1-4ef0-4355-b026-92b1c27d2084.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiY2EzOTk0ZTJhYzk4ZjhmMiIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDYwODA5OH0.IB7Ss8WaYzJYEd-I_i28Ru9xiZZowTjGyx6xjPw7k-Y"
-          download_video "media/campaign-process.mp4" "https://dnznrvs05pmza.cloudfront.net/4036e3aa-0ef2-4480-9d5c-393f11af338e.mp4?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZmNhZjI2NWM5NGIxODBiYyIsImJ1Y2tldCI6InJ1bndheS10YXNrLWFydGlmYWN0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc4NDYyNjY1Mn0.UpLhiBOuYpHfU_LYIeEPkSJxIWrV9BShWJ4ghck6BHQ"
-
-      - name: Verificar imagens, vídeos e arquivos essenciais
+      - name: Verificar versão com imagens
         shell: bash
         run: |
           set -euo pipefail
           test -s index.html
-          test -s portfolio-restore-v5.js
-          test "$(wc -c < portfolio-restore-v5.js)" -gt 5000
-          test -s logo-transparent-base64.txt
-          grep -q 'portfolio-restore-v5.js' index.html
-          grep -q 'DecompressionStream' portfolio-restore-v5.js
-          if grep -qi 'pexels' index.html portfolio-restore-v5.js; then
-            echo "Referência indevida ao Pexels encontrada."
+          grep -q 'modal-process-image' index.html
+          grep -q 'project-image' index.html
+          grep -q 'Conteúdo com tradução em Libras' index.html
+          if grep -q 'data-video=' index.html; then
+            echo "A área do portfólio ainda contém vídeos."
             exit 1
-          fi
-          for file in media/*.mp4; do
-            test -s "$file"
-            test "$(wc -c < "$file")" -gt 100000
-          done
-
-      - name: Salvar vídeos no repositório
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add media/*.mp4
-          if ! git diff --cached --quiet; then
-            git commit -m "Adiciona vídeos demonstrativos locais do portfólio"
-            git push origin HEAD:main
           fi
 
       - name: Configurar GitHub Pages
