@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Inserir imagens no portfólio
         shell: python
@@ -50,6 +52,17 @@ jobs:
           test -s assets/portfolio/print.svg
           test -s assets/portfolio/photography.svg
           grep -q 'portfolio-images-v6.js' index.html
+
+      - name: Salvar e sincronizar a versão publicada
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Ativa imagens representativas no portfólio"
+            git push origin HEAD:main
+          fi
+          git push origin HEAD:gh-pages --force
 
       - uses: actions/configure-pages@v5
         with:
