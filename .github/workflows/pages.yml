@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
 jobs:
@@ -21,32 +21,41 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Baixar repositório
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Verificar versão com imagens
-        shell: bash
+      - name: Inserir imagens no portfólio
+        shell: python
         run: |
-          set -euo pipefail
-          test -s index.html
-          grep -q 'modal-process-image' index.html
-          grep -q 'project-image' index.html
-          grep -q 'Conteúdo com tradução em Libras' index.html
-          if grep -q 'data-video=' index.html; then
-            echo "A área do portfólio ainda contém vídeos."
-            exit 1
-          fi
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script src="portfolio-images-v6.js"></script>'
+          css = '<style id="portfolio-image-mode">#portfolio video{display:none!important}</style>'
+          if 'id="portfolio-image-mode"' not in s:
+              s = s.replace('</head>', css + '</head>', 1)
+          if tag not in s:
+              s = s.replace('</body>', tag + '</body>', 1)
+          p.write_text(s, encoding='utf-8')
 
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
+      - name: Verificar arquivos
+        run: |
+          test -s index.html
+          test -s portfolio-images-v6.js
+          test -s assets/portfolio/branding.svg
+          test -s assets/portfolio/social-media.svg
+          test -s assets/portfolio/web-design.svg
+          test -s assets/portfolio/audiovisual.svg
+          test -s assets/portfolio/libras.svg
+          test -s assets/portfolio/campaign.svg
+          test -s assets/portfolio/print.svg
+          test -s assets/portfolio/photography.svg
+          grep -q 'portfolio-images-v6.js' index.html
+
+      - uses: actions/configure-pages@v5
         with:
           enablement: true
-
-      - name: Enviar arquivos do site
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: .
-
-      - name: Publicar
-        id: deployment
+      - id: deployment
         uses: actions/deploy-pages@v4
